@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-'
+# coding=UTF-8
 import os
 import os.path
 import time
@@ -6,6 +6,7 @@ import pysvn
 from log import *
 
 client = pysvn.Client()
+ignores = {"ignore", "commit", "testcode"}
 
 
 # 排除相同日志
@@ -29,7 +30,7 @@ def repignore(str):
     return True
 
 
-ignores = {"ignore", "commit", "testcode"}
+
 
 
 def writeAppSvnInfo(d):
@@ -57,9 +58,12 @@ def GetSvnLog_Style1(svn_path, start_timestamp, end_timestamp):
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_timestamp)
     revision_end1 = pysvn.Revision(pysvn.opt_revision_kind.date, end_timestamp)
     log_list = client.log(svn_path, revision_start, revision_end1)
+
     dic = {}
     for LogInfo in log_list:
+
         LogInfo.message = LogInfo.message.replace("\n", "")
+
         if LogInfo.message != "":
             if repignore(LogInfo.message) == True:
                 if dic.has_key(LogInfo.author) == False:

@@ -1,6 +1,10 @@
-# -*- coding: utf8 -*-'
+# coding=UTF-8
 import ctypes
 import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')  # @UndefinedVariable
+
 
 STD_OUTPUT_HANDLE = -11
 
