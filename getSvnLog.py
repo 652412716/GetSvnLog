@@ -1,7 +1,10 @@
 # -*- coding: utf8 -*-'
-import os, sys, os.path
-import pysvn
+import os
+import os.path
 import time
+import pysvn
+from log import *
+
 
 client = pysvn.Client()
 
@@ -51,9 +54,11 @@ def fmtDateTime(t):
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t))
 
 
-def getsvnLog_style1(svn_path, y, m, d, ty, tm, td):
+def GetSvnLog_Style1(svn_path, y, m, d, ty, tm, td):
     start_date = time.mktime((int(y), int(m), int(d), 0, 0, 0, 0, 0, 0))
+    print 'start_data:', start_date
     end_date = time.mktime((int(ty), int(tm), int(td), 0, 0, 0, 0, 0, 0))
+    print 'end_date = ', end_date
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_date)
     revision_end1 = pysvn.Revision(pysvn.opt_revision_kind.date, end_date)
     LogList = client.log(svn_path, revision_start, revision_end1)
@@ -77,7 +82,7 @@ def getsvnLog_style1(svn_path, y, m, d, ty, tm, td):
     f.close()
 
 
-def getsvnLog_style2(svn_path, y, m, d, ty, tm, td):
+def GetSvnLog_Style2(svn_path, y, m, d, ty, tm, td):
     start_date = time.mktime((int(y), int(m), int(d), 0, 0, 0, 0, 0, 0))
     end_date = time.mktime((int(ty), int(tm), int(td), 0, 0, 0, 0, 0, 0))
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_date)
@@ -126,6 +131,7 @@ def GetSvnConfig(file_name):
 
 
 def get_login(realm, username, may_save):
+    print "111111111"
     print realm, username
     global cfg
     id = realm.split(" ")[1]
@@ -133,11 +139,29 @@ def get_login(realm, username, may_save):
     return (True, cfg["SVN_USERNAME"], cfg["SVN_PASSWORD"], True)
 
 
-cfg = GetSvnConfig("svnLogConfig.txt")
-client.callback_get_login = get_login
-start_date = cfg["SVN_START_DATE"].split(',')
-end_date = cfg["SVN_END_DATE"].split(',')
-svn_path = cfg["SVN_PATH"]
+def GetTimestamp(data_time):
+    print("aimingChen")
+
+
+config_msg = GetSvnConfig("svnLogConfig.txt")
+print config_msg, "aimingChen 1111111"
+# client.callback_get_login = get_login
+
+start_date = config_msg["SVN_START_DATE"].split(',')
+
+
+LogDebug(start_date, "aimingChen 1111111")
+
+
+
+end_date = config_msg["SVN_END_DATE"].split(',')
+svn_path = config_msg["SVN_PATH"]
+
+
+a = "Sat Mar 28 22:24:24 2016"
+print "5151515", time.strptime(a, "%a %b %d %H:%M:%S %Y")
+print time.mktime(time.strptime(a, "%a %b %d %H:%M:%S %Y"))
+
 print start_date[0]
 print start_date[1]
 print start_date[2]
@@ -146,5 +170,8 @@ print end_date[0]
 print end_date[1]
 print end_date[2]
 
-getsvnLog_style1(svn_path, start_date[0], start_date[1], start_date[2], end_date[0], end_date[1], end_date[2])
-getsvnLog_style2(svn_path, start_date[0], start_date[1], start_date[2], end_date[0], end_date[1], end_date[2])
+
+
+
+GetSvnLog_Style1(svn_path, start_date[0], start_date[1], start_date[2], end_date[0], end_date[1], end_date[2])
+GetSvnLog_Style2(svn_path, start_date[0], start_date[1], start_date[2], end_date[0], end_date[1], end_date[2])
