@@ -31,7 +31,7 @@ ignores = {"ignore", "commit", "testcode"}
 
 
 def writeAppSvnInfo(d):
-    cfg = readIni(basedir + "/" + pf + "_apprev.log")
+    cfg = GetSvnConfig(basedir + "/" + pf + "_apprev.log")
 
     info = client.info(d + "/main")
     cfg["prev"] = cfg.get("rev") or 0
@@ -106,19 +106,23 @@ def getsvnLog_style2(svn_path, y, m, d, ty, tm, td):
     f.close()
 
 
-def readIni(fn):
-    if not os.path.exists(fn):
-        print "ini file not exists:", fn
+def GetSvnConfig(file_name):
+    if not os.path.exists(file_name):
+        print "config file not exists >>>", file_name
         return {}
-    print "read ini :", fn
-    cfgf = open(fn)
-    cfg = {}
-    for l in cfgf.readlines():
-        strs = l.strip().split("=")
-        print l
-        if len(strs) == 2:
-            cfg[strs[0]] = strs[1]
-    return cfg
+
+    print "read config file :", file_name
+    config_file = open(file_name)
+    config_msg = {}
+
+    print "get svn config message:"
+    for svnConfigMsg in config_file.readlines():
+        split_msg = svnConfigMsg.strip().split("=")
+        print svnConfigMsg
+        if len(split_msg) == 2:
+            config_msg[split_msg[0]] = split_msg[1]
+
+    return config_msg
 
 
 def get_login(realm, username, may_save):
@@ -129,7 +133,7 @@ def get_login(realm, username, may_save):
     return (True, cfg["SVN_USERNAME"], cfg["SVN_PASSWORD"], True)
 
 
-cfg = readIni("svnlogConfig.txt")
+cfg = GetSvnConfig("svnLogConfig.txt")
 client.callback_get_login = get_login
 start_date = cfg["SVN_START_DATE"].split(',')
 end_date = cfg["SVN_END_DATE"].split(',')
