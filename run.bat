@@ -1,0 +1,2 @@
+python getSvnLog.py
+pause
