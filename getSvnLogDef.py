@@ -21,16 +21,13 @@ def rep(str, samestr):
 
 
 # 排除过滤
-def repignore(str):
+def IsRepeat(str):
     str1 = "ignore"
     for i in ignores:
         pos = str.rfind(i)
         if pos >= 0:
             return False
     return True
-
-
-
 
 
 def writeAppSvnInfo(d):
@@ -65,11 +62,11 @@ def GetSvnLog_Style1(svn_path, start_timestamp, end_timestamp):
         LogInfo.message = LogInfo.message.replace("\n", "")
 
         if LogInfo.message != "":
-            if repignore(LogInfo.message) == True:
-                if dic.has_key(LogInfo.author) == False:
+            if IsRepeat(LogInfo.message):
+                if not (LogInfo.author in dic):
                     dic[LogInfo.author] = {"msg": "", "name": LogInfo.author, "date": "", "showmsg": ""}
                 # else:
-                if rep(dic[LogInfo.author]["msg"], LogInfo.message) == False:
+                if not rep(dic[LogInfo.author]["msg"], LogInfo.message):
                     dic[LogInfo.author]["msg"] += LogInfo.message + "\&"
                     dic[LogInfo.author]["date"] += fmtDateTime(LogInfo.date)
                     dic[LogInfo.author]["showmsg"] += LogInfo.message + "  " + fmtDateTime(LogInfo.date) + "\n"
@@ -89,7 +86,7 @@ def GetSvnLog_Style2(svn_path, start_timestamp, end_timestamp):
     for LogInfo in log_list:
         LogInfo.message = LogInfo.message.replace("\n", "")
         if LogInfo.message != "":
-            if repignore(LogInfo.message) == True:
+            if IsRepeat(LogInfo.message) == True:
                 if dic.has_key(LogInfo.author) == False:
                     dic[LogInfo.author] = {"msg": "", "name": LogInfo.author, "date": "", "showmsg": ""}
                 # else:
