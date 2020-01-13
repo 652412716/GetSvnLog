@@ -3,3 +3,4 @@ SVN_USERNAME=linjinxing
 SVN_PASSWORD=hhjhj@jhjh
 SVN_START_DATE=2019,7,8
 SVN_END_DATE=2020,1,10
+SVN_KEYWORD=fix,change,add

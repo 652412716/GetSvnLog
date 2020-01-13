@@ -54,11 +54,11 @@ def set_cmd_text_color(color, handle=std_out_handle):
     return color
 
 
-def resetColor():
+def reset_color():
     set_cmd_text_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
 
 
-def LogDebug(print_msg, tip_text):
+def log_debug(print_msg, tip_text):
     set_cmd_text_color(FOREGROUND_GREEN)
     print tip_text + " >>> ", print_msg
-    resetColor()
+    reset_color()

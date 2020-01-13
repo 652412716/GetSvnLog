@@ -8,6 +8,8 @@ from log import *
 client = pysvn.Client()
 ignores = {"ignore", "commit", "testcode"}
 
+svn_keyword = " "
+
 
 # 排除相同日志
 def rep(str, samestr):
@@ -21,7 +23,7 @@ def rep(str, samestr):
 
 
 # 排除过滤
-def IsRepeat(str):
+def is_repeat(str):
     str1 = "ignore"
     for i in ignores:
         pos = str.rfind(i)
@@ -31,7 +33,7 @@ def IsRepeat(str):
 
 
 def writeAppSvnInfo(d):
-    cfg = GetSvnConfig(basedir + "/" + pf + "_apprev.log")
+    cfg = get_svn_config(basedir + "/" + pf + "_apprev.log")
 
     info = client.info(d + "/main")
     cfg["prev"] = cfg.get("rev") or 0
@@ -51,34 +53,48 @@ def fmtDateTime(t):
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t))
 
 
-def GetSvnLog_Style1(svn_path, start_timestamp, end_timestamp):
+def get_svn_log_style1(svn_path, start_timestamp, end_timestamp, keywords):
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_timestamp)
     revision_end1 = pysvn.Revision(pysvn.opt_revision_kind.date, end_timestamp)
+
     log_list = client.log(svn_path, revision_start, revision_end1)
 
     dic = {}
-    for LogInfo in log_list:
+    for log_info in log_list:
 
-        LogInfo.message = LogInfo.message.replace("\n", "")
+        log_info.message = log_info.message.replace("\n", "")
 
-        if LogInfo.message != "":
-            if IsRepeat(LogInfo.message):
-                if not (LogInfo.author in dic):
-                    dic[LogInfo.author] = {"msg": "", "name": LogInfo.author, "date": "", "showmsg": ""}
+        if log_info.message != "":
+            if is_repeat(log_info.message):
+                if not (log_info.author in dic):
+                    dic[log_info.author] = {"msg": "", "name": log_info.author, "date": "", "show_msg": ""}
                 # else:
-                if not rep(dic[LogInfo.author]["msg"], LogInfo.message):
-                    dic[LogInfo.author]["msg"] += LogInfo.message + "\&"
-                    dic[LogInfo.author]["date"] += fmtDateTime(LogInfo.date)
-                    dic[LogInfo.author]["showmsg"] += LogInfo.message + "  " + fmtDateTime(LogInfo.date) + "\n"
-    s1 = "start log content\n"
+                if not rep(dic[log_info.author]["msg"], log_info.message):
+                    dic[log_info.author]["msg"] += log_info.message
+                    dic[log_info.author]["date"] += fmtDateTime(log_info.date)
+                    dic[log_info.author]["show_msg"] += log_info.message + "  " + fmtDateTime(log_info.date) + "\n"
+
+    log_text = "start log content\n"
     for key, value in dic.items():
-        s1 += "\n\n\n\n------------------ " + key + " ---------------------------\n" + value["showmsg"]
-    f = open("svnLog_style1.txt", "w")
-    f.write(s1)
-    f.close()
+        log_text += "\n\n\n\n------------------ " + key + " ---------------------------\n" + value["show_msg"]
+        log_debug(key, "key is:")
+        count_log_msg(value["show_msg"], keywords)
+    svn_text_log = open("svnLog_style1.txt", "w")
+    svn_text_log.write(log_text)
+    svn_text_log.close()
 
 
-def GetSvnLog_Style2(svn_path, start_timestamp, end_timestamp):
+def count_log_msg(msg, keywords):
+
+    for keyword in keywords:
+        log_debug(keyword, "keyword is")
+        lower_msg = msg.lower()
+        keyword_count = lower_msg.count(keyword)
+        log_debug(keyword_count, "count num:")
+    print "\n"
+
+
+def get_svn_log_style2(svn_path, start_timestamp, end_timestamp):
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_timestamp)
     revision_end = pysvn.Revision(pysvn.opt_revision_kind.date, end_timestamp)
     log_list = client.log(svn_path, revision_start, revision_end)
@@ -86,7 +102,7 @@ def GetSvnLog_Style2(svn_path, start_timestamp, end_timestamp):
     for LogInfo in log_list:
         LogInfo.message = LogInfo.message.replace("\n", "")
         if LogInfo.message != "":
-            if IsRepeat(LogInfo.message) == True:
+            if is_repeat(LogInfo.message) == True:
                 if dic.has_key(LogInfo.author) == False:
                     dic[LogInfo.author] = {"msg": "", "name": LogInfo.author, "date": "", "showmsg": ""}
                 # else:
@@ -105,7 +121,7 @@ def GetSvnLog_Style2(svn_path, start_timestamp, end_timestamp):
     f.close()
 
 
-def GetSvnConfig(file_name):
+def get_svn_config(file_name):
     if not os.path.exists(file_name):
         print "config file not exists >>>", file_name
         return {}
@@ -133,7 +149,12 @@ def get_login(realm, username, may_save):
     return (True, cfg["SVN_USERNAME"], cfg["SVN_PASSWORD"], True)
 
 
-def GetTimestamp(data_time):
+def get_timestamp(data_time):
     split_data = data_time.split(',')
     timestamp = time.mktime((int(split_data[0]), int(split_data[1]), int(split_data[1]), 0, 0, 0, 0, 0, 0))
     return timestamp
+
+
+def get_keyword(svn_keyword):
+    keyword = svn_keyword.split(',')
+    return keyword
