@@ -3,6 +3,8 @@ import os
 import os.path
 import time
 import pysvn
+# # import matplotlib
+# import matplotlib.pyplot as plt
 from log import *
 
 client = pysvn.Client()
@@ -77,14 +79,16 @@ def get_svn_log_style1(svn_path, start_timestamp, end_timestamp, keywords):
     log_text = "start log content\n"
     for key, value in dic.items():
         log_text += "\n\n\n\n------------------ " + key + " ---------------------------\n" + value["show_msg"]
+
         log_debug(key, "key is:")
-        count_log_msg(value["show_msg"], keywords)
+        count_log_msg_by_keyword(value["show_msg"], keywords)
+
     svn_text_log = open("svnLog_style1.txt", "w")
     svn_text_log.write(log_text)
     svn_text_log.close()
 
 
-def count_log_msg(msg, keywords):
+def count_log_msg_by_keyword(msg, keywords):
 
     for keyword in keywords:
         log_debug(keyword, "keyword is")
@@ -158,3 +162,11 @@ def get_timestamp(data_time):
 def get_keyword(svn_keyword):
     keyword = svn_keyword.split(',')
     return keyword
+
+
+#
+# def draw_map():
+#     print("draw_map!!!")
+#     plt.plot([12, 34, 56, 78, 90])
+#     plt.savefig('tmp.png')
+#     plt.close('all')

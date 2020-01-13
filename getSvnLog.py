@@ -18,6 +18,7 @@ log_debug(svn_path, "svn path is:")
 log_debug(start_date, "start time is:")
 log_debug(end_date, "end time is:")
 
+
 get_svn_log_style1(svn_path, start_timestamp, end_timestamp, keywords)
 get_svn_log_style2(svn_path, start_timestamp, end_timestamp)
 
