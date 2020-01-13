@@ -82,7 +82,7 @@ def get_svn_log_style1(svn_path, start_timestamp, end_timestamp, keywords):
     for key, value in dic.items():
         log_text += "\n\n\n\n------------------ " + key + " ---------------------------\n" + value["show_msg"]
 
-        log_debug(key, "key is:")
+        log_debug(key, "user name is:")
         count_log_msg_by_keyword(value["show_msg"], keywords)
 
     svn_text_log = open("svnLog_style1.txt", "w")
