@@ -56,6 +56,8 @@ def fmtDateTime(t):
 
 
 def get_svn_log_style1(svn_path, start_timestamp, end_timestamp, keywords):
+    log_debug(start_timestamp,"aimingChen start_timestamp")
+    log_debug(end_timestamp,"aimingChen end_timestamp")
     revision_start = pysvn.Revision(pysvn.opt_revision_kind.date, start_timestamp)
     revision_end1 = pysvn.Revision(pysvn.opt_revision_kind.date, end_timestamp)
 
@@ -155,7 +157,7 @@ def get_login(realm, username, may_save):
 
 def get_timestamp(data_time):
     split_data = data_time.split(',')
-    timestamp = time.mktime((int(split_data[0]), int(split_data[1]), int(split_data[1]), 0, 0, 0, 0, 0, 0))
+    timestamp = time.mktime((int(split_data[0]), int(split_data[1]), int(split_data[2]), 0, 0, 0, 0, 0, 0))
     return timestamp
 
 
