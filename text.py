@@ -1,3 +1,6 @@
+# coding=utf-8
+import time
+
 nums = [0, 1, 2, 2, 3, 4, 2]
 val = 2
 out_string = ""
@@ -42,10 +45,43 @@ def climb_stairs_2(i, n, memo):
     return memo[i]
 
 
+def climb_stairs_3(n):
+    if n == 1:
+        return n
+    count_list = [0 for x in range(0, n+1)]
+    i = 3
+    count_list[1] = 1
+    count_list[2] = 2
+    while i <= n:
+        count_list[i] = count_list[i-1] + count_list[i-2]
+        i += 1
+
+    return count_list[n]
+
+
+def climb_stairs_4(n):  # 斐波那契数
+    if n == 1:
+        return 1
+
+    first = 1
+    second = 2
+    i = 3
+    while i <= n:
+        third = first + second
+        first = second
+        second = third
+
+    return third
+
+
 test_memo = []
 
 
-print climb_stairs_2(0, 40, test_memo)
+print "2", climb_stairs_2(0, 40, test_memo)
 
-print climb_stairs_1(0, 40)
+print "3", climb_stairs_3(40)
+
+print "4", climb_stairs_4(40)
+
+# print climb_stairs_1(0, 40)
 
