@@ -151,4 +151,103 @@ def isHappy_1(num):
         return True
 
 
-print isHappy_1(2)
+# print isHappy_1(2)
+
+
+def letter_combination(letters):
+    dict_1 = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
+    letter_list = ["", "", "", ""]
+    letters_len = len(letters)
+    for letter in letters:
+        print dict_1[letter]
+
+
+def count_list(letter_list, letters):
+    print "ccc"
+    idx = 0
+    for letter in letters:
+        letter_list[idx] = letter_list[idx]
+
+
+# letter_combination("23")
+
+
+def queue_test(k):
+    test_list = [None for i in range(k)]
+    print test_list.count(None)
+    print test_list
+
+
+def num_reverse(x):
+    min_mun = (-2) ** 31
+    max_mun = 2 ** 31 - 1
+    print x
+    print max_mun
+    print x > max_mun
+    if x < min_mun | x > max_mun:
+        return 0
+
+    is_negative = False
+    numbers = x
+    if x > 0:
+        str_nums = str(numbers)
+    else:
+        is_negative = True
+        str_nums = str(abs(numbers))
+
+    reverse_str = str_nums[::-1]
+    reverse_num = int(reverse_str)
+
+    if is_negative:
+        reverse_num = 0 - reverse_num
+
+    if reverse_num < min_mun or reverse_num > min_mun:
+        return 0
+
+    return reverse_num
+
+
+def orangesRotting(grid):
+    bad_oranges = []
+    good_oranges = []
+    for i in range(len(grid)):
+        line = grid[i]
+        for j in range(len(line)):
+            sub = line[j]
+            if sub == 2:
+                bad_oranges.append([i, j])
+            elif sub == 1:
+                good_oranges.append([i, j])
+
+    return infectOranges(bad_oranges, good_oranges, 0)
+
+
+def infectOranges(bad_oranges, good_oranges, count_time):
+    new_bad_oranges = []
+    maybe_bad = []
+    can_infect = False
+    for bad_orange in bad_oranges:
+        x = bad_orange[0]
+        y = bad_orange[1]
+        maybe_bad.append([x + 1, y])
+        maybe_bad.append([x - 1, y])
+        maybe_bad.append([x, y + 1])
+        maybe_bad.append([x, y - 1])
+
+    for bad in maybe_bad:
+        if bad in good_oranges:
+            can_infect = True
+            new_bad_oranges.append(bad)
+            good_oranges.remove(bad)
+
+    if can_infect:
+        count_time += 1
+        return infectOranges(new_bad_oranges, good_oranges, count_time)
+    else:
+        if len(good_oranges) > 0:
+            return -1
+        else:
+            return count_time
+
+
+print orangesRotting([[2, 1, 1], [1, 1, 0], [0, 1, 1]])
