@@ -250,4 +250,20 @@ def infectOranges(bad_oranges, good_oranges, count_time):
             return count_time
 
 
-print orangesRotting([[2, 1, 1], [1, 1, 0], [0, 1, 1]])
+def checkCostList(i, cost, spend, spend_list):
+
+    if i >= len(cost):
+        spend_list.append(spend)
+        return spend_list
+
+    if i - 1 >= 0:
+        spend += int(cost[i])
+
+    return checkCostList(i + 1, cost, spend, spend_list) + checkCostList(i + 2, cost, spend, spend_list)
+
+
+# print checkCostList(0, [10, 15, 20], 0, [])
+# list_1 = [9]
+# list_1.insert(0, 1)
+# print list_1
+
